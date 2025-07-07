@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Eiken Grade 1 Essay Practice</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 10px; border: 1px solid #ddd; }
+        h1 { text-align: center; }
+        textarea { width: 100%; height: 150px; margin-top: 10px; }
+        button { margin: 5px; }
+        .section { margin-top: 20px; }
+        #timer { font-size: 1.5em; margin: 10px 0; }
+        pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+<h1>Eiken Grade 1 Essay Practice</h1>
+
+<div class="section">
+    <strong>Topic:</strong>
+    <p id="topic">Press "Next Topic" to start!</p>
+    <button onclick="nextTopic()">Next Topic</button>
+    <button onclick="showModelAnswer()">Show Model Answer</button>
+</div>
+
+<div class="section">
+    <strong>Timer:</strong>
+    <div id="timer">0:00</div>
+    <button onclick="startTimer()">Start</button>
+    <button onclick="pauseTimer()">Pause</button>
+    <button onclick="resetTimer()">Reset</button>
+</div>
+
+<div class="section">
+    <strong>Your Essay:</strong>
+    <textarea id="userEssay" placeholder="Write your essay here..."></textarea>
+</div>
+
+<div class="section">
+    <button onclick="showCorrection()">Check My Essay (Sample Feedback)</button>
+</div>
+
+<div class="section">
+    <strong>Model Answer:</strong>
+    <pre id="modelAnswer">(Hidden)</pre>
+</div>
+
+<div class="section">
+    <strong>Feedback:</strong>
+    <pre id="feedback">(Feedback will appear here)</pre>
+</div>
+
+<script>
+const topics = [
+    { topic: "Should Japan accept more immigrants?", answer: "Japan's declining population causes labor shortages... (sample)" },
+    { topic: "Is space exploration worth the cost?", answer: "Space research brings innovation and global benefits... (sample)" },
+    { topic: "Should the voting age be lowered to 18?", answer: "Lowering the voting age fosters civic engagement... (sample)" },
+    // ← この部分に残りのお題と模範解答を追加（全部で30個分）
+];
+
+let timer = 0;
+let timerInterval = null;
+
+function nextTopic() {
+    const rand = Math.floor(Math.random() * topics.length);
+    document.getElementById('topic').innerText = topics[rand].topic;
+    document.getElementById('modelAnswer').innerText = "(Hidden)";
+    document.getElementById('feedback').innerText = "(Feedback will appear here)";
+}
+
+function showModelAnswer() {
+    const currentTopic = document.getElementById('topic').innerText;
+    const found = topics.find(t => t.topic === currentTopic);
+    if (found) document.getElementById('modelAnswer').innerText = found.answer;
+}
+
+function startTimer() {
+    if (timerInterval) return;
+    timerInterval = setInterval(() => {
+        timer++;
+        const minutes = Math.floor(timer / 60);
+        const seconds = timer % 60;
+        document.getElementById('timer').innerText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }, 1000);
+}
+
+function pauseTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+}
+
+function resetTimer() {
+    pauseTimer();
+    timer = 0;
+    document.getElementById('timer').innerText = "0:00";
+}
+
+function showCorrection() {
+    const essay = document.getElementById('userEssay').value;
+    if (!essay.trim()) {
+        alert("Please write your essay first!");
+        return;
+    }
+    document.getElementById('feedback').innerText = "(Sample feedback: Check grammar, structure, and clarity.)";
+}
+</script>
+
+</body>
+</html>
