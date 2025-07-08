@@ -2,15 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Eiken Grade 1 Essay Practice</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 10px; border: 1px solid #ddd; }
-        h1 { text-align: center; }
-        textarea { width: 100%; height: 150px; margin-top: 10px; }
-        button { margin: 5px; }
-        .section { margin-top: 20px; }
-        #timer { font-size: 1.5em; margin: 10px 0; }
-        pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            width: 95%;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        h1 {
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-top: 10px;
+        }
+        button {
+            margin: 5px;
+            font-size: 1.1em;
+            padding: 10px 15px;
+        }
+        .section {
+            margin-top: 20px;
+        }
+        #timer {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            white-space: pre-wrap;
+        }
     </style>
 </head>
 <body>
@@ -154,7 +181,7 @@ function showCorrection() {
     for (const [wrong, correct] of Object.entries(commonMisspellings)) {
         const regex = new RegExp(`\\b${wrong}\\b`, "gi");
         if (regex.test(essay)) {
-            feedback += `❗ Spelling: \"${wrong}\" might be a mistake. Did you mean \"${correct}\"?\n`;
+            feedback += `❗ Spelling: "${wrong}" might be a mistake. Did you mean "${correct}"?\n`;
         }
     }
 
