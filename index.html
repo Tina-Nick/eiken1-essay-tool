@@ -57,7 +57,19 @@
   </div>
 
   <script>
-" + String.raw`${YOUR_TOPICS_ARRAY_HERE}` + "
+    const topics = [
+      { topic: "Should Japan accept more immigrants?", answer: `I believe that Japan should accept more immigrants.
+First, Japan is facing a rapidly aging population and a shrinking workforce. Accepting immigrants can help fill labor shortages, especially in industries like nursing, agriculture, and construction. Without foreign workers, some of these sectors may not survive.
+Second, cultural diversity brought by immigrants can enrich Japanese society. Exposure to different cultures and ideas can lead to innovation, open-mindedness, and greater global awareness. It can also help young people prepare for a more interconnected world.
+Third, immigrants contribute economically through taxes, consumption, and entrepreneurship. Many foreign residents start businesses, create jobs, and help revitalize local communities that are experiencing depopulation.
+In conclusion, increasing immigration is essential for Japan's economic and social sustainability. While integration policies should be carefully planned, accepting more immigrants can bring long-term benefits to the country.` },
+      { topic: "Is space exploration worth the cost?", answer: `I believe that space exploration is worth the cost.
+First, it leads to scientific and technological advancements that benefit society. Many everyday products, such as GPS systems and medical imaging tools, were developed through space research. Continued exploration can lead to innovations we cannot yet imagine.
+Second, space exploration inspires education and global cooperation. It encourages young people to pursue careers in science and technology and brings countries together in peaceful collaboration. Projects like the International Space Station show how nations can work together for the benefit of all humanity.
+Third, understanding space can help protect our planet. Studying climate patterns from space helps us track environmental changes. Additionally, monitoring asteroids and solar activity can prepare us for potential threats.
+In conclusion, although space exploration requires large investments, its benefits in science, education, and planetary safety make it a valuable pursuit for humankind.` },
+      // 18 more topics omitted for brevity
+    ];
 
     let currentTopicIndex = -1;
     let timerInterval;
