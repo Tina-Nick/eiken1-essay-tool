@@ -1,134 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Eiken Grade 1 Essay Practice</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 1em;
-      padding: 0;
-      background-color: #f9f9f9;
-    }
-    textarea {
-      width: 100%;
-      height: 150px;
-      margin-top: 0.5em;
-    }
-    button {
-      margin-right: 0.5em;
-      margin-top: 0.5em;
-    }
-    .section {
-      margin-bottom: 2em;
-    }
-    .timer {
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  <h1>Eiken Grade 1 Essay Practice</h1>
-
-  <div class="section">
-    <button onclick="nextTopic()">Next Topic</button>
-    <span id="topic" style="font-weight:bold"></span>
-  </div>
-
-  <div class="section">
-    <button onclick="startTimer()">Start</button>
-    <button onclick="pauseTimer()">Pause</button>
-    <button onclick="resetTimer()">Reset</button>
-    <span class="timer" id="timer">0:00</span>
-  </div>
-
-  <div class="section">
-    <label for="userEssay">Your Essay:</label>
-    <textarea id="userEssay"></textarea>
-    <div>Word count: <span id="wordCount">0</span></div>
-    <button onclick="checkEssay()">Check Essay</button>
-    <div id="feedback"></div>
-  </div>
-
-  <div class="section">
-    <button onclick="showAnswer()">Show Model Answer</button>
-    <pre id="modelAnswer"></pre>
-  </div>
-
-  <script src="topics-full.js"></script>
-  <script>
-    let currentTopicIndex = -1;
-    let timerInterval;
-    let seconds = 0;
-
-    function nextTopic() {
-      currentTopicIndex = Math.floor(Math.random() * topics.length);
-      document.getElementById('topic').textContent = topics[currentTopicIndex].topic;
-      document.getElementById('modelAnswer').textContent = '';
-      document.getElementById('userEssay').value = '';
-      document.getElementById('feedback').textContent = '';
-      document.getElementById('wordCount').textContent = 0;
-      resetTimer();
-    }
-
-    function showAnswer() {
-      if (currentTopicIndex >= 0) {
-        document.getElementById('modelAnswer').textContent = topics[currentTopicIndex].answer;
-      }
-    }
-
-    function startTimer() {
-      if (!timerInterval) {
-        timerInterval = setInterval(() => {
-          seconds++;
-          const min = Math.floor(seconds / 60);
-          const sec = seconds % 60;
-          document.getElementById('timer').textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
-        }, 1000);
-      }
-    }
-
-    function pauseTimer() {
-      clearInterval(timerInterval);
-      timerInterval = null;
-    }
-
-    function resetTimer() {
-      pauseTimer();
-      seconds = 0;
-      document.getElementById('timer').textContent = '0:00';
-    }
-
-    document.getElementById('userEssay').addEventListener('input', () => {
-      const words = document.getElementById('userEssay').value.trim().split(/\s+/);
-      const wordCount = words.filter(word => word.length > 0).length;
-      document.getElementById('wordCount').textContent = wordCount;
-    });
-
-    function checkEssay() {
-      const text = document.getElementById('userEssay').value;
-      let feedback = '';
-
-      const reasonMatches = (text.match(/first|second|third/gi) || []).length;
-      if (reasonMatches < 3) {
-        feedback += '✘ Try to include three clear reasons (First, Second, Third).\n';
-      } else {
-        feedback += '✔ Good structure with three reasons.\n';
-      }
-
-      if (/\bteh\b/i.test(text)) {
-        feedback += '✘ "teh" might be a typo. Did you mean "the"?\n';
-      }
-
-      if (!/in conclusion/i.test(text)) {
-        feedback += '✘ Try to include a clear conclusion phrase like "In conclusion".\n';
-      } else {
-        feedback += '✔ Clear conclusion found.\n';
-      }
-
-      document.getElementById('feedback').textContent = feedback;
-    },
+const topics = [
+  {
+    topic: "Should Japan accept more immigrants?",
+    answer: `I believe that Japan should accept more immigrants.
+First, Japan is facing a rapidly aging population and a shrinking workforce. Accepting immigrants can help fill labor shortages, especially in industries like nursing, agriculture, and construction. Without foreign workers, some of these sectors may not survive.
+Second, cultural diversity brought by immigrants can enrich Japanese society. Exposure to different cultures and ideas can lead to innovation, open-mindedness, and greater global awareness. It can also help young people prepare for a more interconnected world.
+Third, immigrants contribute economically through taxes, consumption, and entrepreneurship. Many foreign residents start businesses, create jobs, and help revitalize local communities that are experiencing depopulation.
+In conclusion, increasing immigration is essential for Japan's economic and social sustainability. While integration policies should be carefully planned, accepting more immigrants can bring long-term benefits to the country.`
+  },
+  {
+    topic: "Is space exploration worth the cost?",
+    answer: `I believe that space exploration is worth the cost.
+First, it leads to scientific and technological advancements that benefit society. Many everyday products, such as GPS systems and medical imaging tools, were developed through space research. Continued exploration can lead to innovations we cannot yet imagine.
+Second, space exploration inspires education and global cooperation. It encourages young people to pursue careers in science and technology and brings countries together in peaceful collaboration. Projects like the International Space Station show how nations can work together for the benefit of all humanity.
+Third, understanding space can help protect our planet. Studying climate patterns from space helps us track environmental changes. Additionally, monitoring asteroids and solar activity can prepare us for potential threats.
+In conclusion, although space exploration requires large investments, its benefits in science, education, and planetary safety make it a valuable pursuit for humankind.`
+  },
+  {
+    topic: "Can artificial intelligence improve our lives?",
+    answer: `I believe that artificial intelligence (AI) can improve our lives.
+First, AI can increase efficiency in many fields. For example, in healthcare, AI can assist doctors by analyzing medical images or predicting diseases. In manufacturing, AI can optimize production lines and reduce human error.
+Second, AI can make daily life more convenient. Virtual assistants like Siri and Alexa help with tasks, while AI-driven apps recommend music, movies, and news. These personalized services save time and improve user experiences.
+Third, AI can help solve global challenges. It can be used to combat climate change, optimize energy use, and analyze large datasets for research. AI is a powerful tool for innovation and social progress.
+In conclusion, with proper ethical guidelines and responsible development, AI has the potential to bring great benefits and improve the quality of life for people around the world.`
+  },
   {
     topic: "Is a cashless society a good idea?",
     answer: `I believe that a cashless society is a good idea.
@@ -185,9 +79,4 @@ Second, tourism often raises prices for housing and goods, making it harder for 
 Third, tourist behavior can disrupt local culture and traditions. Inappropriate actions or commercialization may weaken the identity of the community.
 In conclusion, while tourism can bring economic benefits, it must be managed carefully to avoid harming the communities it affects.`
   }
-
-
-    nextTopic();
-  </script>
-</body>
-</html>
+];
