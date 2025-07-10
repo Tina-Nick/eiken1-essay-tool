@@ -1,201 +1,141 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Eiken Grade 1 Essay Practice</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            width: 95%;
-            margin: 20px auto;
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-        h1 {
-            text-align: center;
-        }
-        textarea {
-            width: 100%;
-            height: 150px;
-            margin-top: 10px;
-        }
-        button {
-            margin: 5px;
-            font-size: 1.1em;
-            padding: 10px 15px;
-        }
-        .section {
-            margin-top: 20px;
-        }
-        #timer {
-            font-size: 1.5em;
-            margin: 10px 0;
-        }
-        pre {
-            background: #f0f0f0;
-            padding: 10px;
-            white-space: pre-wrap;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eiken Grade 1 Essay Practice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 1em;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-top: 0.5em;
+    }
+    button {
+      margin-right: 0.5em;
+      margin-top: 0.5em;
+    }
+    .section {
+      margin-bottom: 2em;
+    }
+    .timer {
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-<h1>Eiken Grade 1 Essay Practice</h1>
+  <h1>Eiken Grade 1 Essay Practice</h1>
 
-<div class="section">
-    <strong>Topic:</strong>
-    <p id="topic">Press "Next Topic" to start!</p>
+  <div class="section">
     <button onclick="nextTopic()">Next Topic</button>
-    <button onclick="showModelAnswer()">Show Model Answer</button>
-</div>
+    <span id="topic" style="font-weight:bold"></span>
+  </div>
 
-<div class="section">
-    <strong>Timer:</strong>
-    <div id="timer">0:00</div>
+  <div class="section">
     <button onclick="startTimer()">Start</button>
     <button onclick="pauseTimer()">Pause</button>
     <button onclick="resetTimer()">Reset</button>
-</div>
+    <span class="timer" id="timer">0:00</span>
+  </div>
 
-<div class="section">
-    <strong>Your Essay:</strong>
-    <textarea id="userEssay" placeholder="Write your essay here..." oninput="countWords()"></textarea>
-    <div><strong>Word Count:</strong> <span id="wordCount">0</span> words</div>
-</div>
+  <div class="section">
+    <label for="userEssay">Your Essay:</label>
+    <textarea id="userEssay"></textarea>
+    <div>Word count: <span id="wordCount">0</span></div>
+    <button onclick="checkEssay()">Check Essay</button>
+    <div id="feedback"></div>
+  </div>
 
-<div class="section">
-    <button onclick="showCorrection()">Check My Essay (Feedback)</button>
-</div>
+  <div class="section">
+    <button onclick="showAnswer()">Show Model Answer</button>
+    <pre id="modelAnswer"></pre>
+  </div>
 
-<div class="section">
-    <strong>Model Answer:</strong>
-    <pre id="modelAnswer">(Hidden)</pre>
-</div>
+  <script>
+" + String.raw`${YOUR_TOPICS_ARRAY_HERE}` + "
 
-<div class="section">
-    <strong>Feedback:</strong>
-    <pre id="feedback">(Feedback will appear here)</pre>
-</div>
+    let currentTopicIndex = -1;
+    let timerInterval;
+    let seconds = 0;
 
-<script>
-const topics = [
-    { topic: "Should Japan accept more immigrants?", answer: "I believe that Japan should accept more immigrants.\nFirst, Japan is facing a rapidly aging population and a shrinking workforce. Accepting immigrants can help fill labor shortages, especially in industries like nursing, agriculture, and construction. Without foreign workers, some of these sectors may not survive.\nSecond, cultural diversity brought by immigrants can enrich Japanese society. Exposure to different cultures and ideas can lead to innovation, open-mindedness, and greater global awareness. It can also help young people prepare for a more interconnected world.\nThird, immigrants contribute economically through taxes, consumption, and entrepreneurship. Many foreign residents start businesses, create jobs, and help revitalize local communities that are experiencing depopulation.\nIn conclusion, increasing immigration is essential for Japan's economic and social sustainability. While integration policies should be carefully planned, accepting more immigrants can bring long-term benefits to the country." },
-    { topic: "Is space exploration worth the cost?", answer: "I believe that space exploration is worth the cost.\nFirst, it leads to scientific and technological advancements that benefit society. Many everyday products, such as GPS systems and medical imaging tools, were developed through space research. Continued exploration can lead to innovations we cannot yet imagine.\nSecond, space exploration inspires education and global cooperation. It encourages young people to pursue careers in science and technology and brings countries together in peaceful collaboration. Projects like the International Space Station show how nations can work together for the benefit of all humanity.\nThird, understanding space can help protect our planet. Studying climate patterns from space helps us track environmental changes. Additionally, monitoring asteroids and solar activity can prepare us for potential threats.\nIn conclusion, although space exploration requires large investments, its benefits in science, education, and planetary safety make it a valuable pursuit for humankind." },
-    { topic: "Can technology solve environmental problems?", answer: "I believe that technology can play a crucial role in solving environmental problems.\nFirst, renewable energy technologies such as solar and wind power reduce our dependence on fossil fuels. By replacing coal and oil with clean alternatives, we can lower greenhouse gas emissions and combat climate change.\nSecond, technological advances in recycling and waste management help reduce pollution. For example, AI and robotics can sort waste more efficiently, and new materials can be designed to be biodegradable or easier to reuse.\nThird, environmental monitoring technology allows us to detect and respond to problems more quickly. Satellites, drones, and sensors provide real-time data on air quality, deforestation, and ocean pollution. This information supports better policymaking and enforcement.\nIn conclusion, while technology alone cannot solve every environmental issue, it is a powerful tool that, when combined with human effort and policy, can lead to a cleaner and more sustainable world." },
-    { topic: "Should public transportation be free?", answer: "I believe that public transportation should be free for everyone.\nFirst, making transportation free encourages more people to use buses and trains instead of cars. This can reduce traffic congestion and air pollution in cities, creating a healthier environment for all.\nSecond, free transportation helps low-income individuals access education, jobs, and healthcare more easily. It promotes social equity and gives everyone the same opportunities regardless of their financial situation.\nThird, free public transport can stimulate local economies. With more people moving freely, businesses near stations can benefit from increased foot traffic and spending.\nIn conclusion, free public transportation can improve urban mobility, reduce environmental harm, and create a more inclusive society." },
-    { topic: "Does social media do more harm than good?", answer: "I believe that social media does more harm than good.\nFirst, it negatively affects mental health. Many users experience anxiety and depression from comparing themselves to others or dealing with online harassment.\nSecond, social media spreads misinformation quickly. False news and conspiracy theories can go viral, causing confusion and undermining trust in science and democracy.\nThird, it reduces productivity and face-to-face interaction. People often spend hours scrolling instead of working or connecting meaningfully with others.\nIn conclusion, while social media has some benefits, such as staying in touch with friends, the overall negative impacts on mental health, truth, and human connection outweigh the positives." },
-    { topic: "Is homeschooling better than traditional schooling?", answer: "I believe that homeschooling can be better than traditional schooling for some students.\nFirst, homeschooling offers personalized education tailored to a child’s needs and learning pace. This individualized approach helps students grasp difficult subjects more effectively.\nSecond, it allows for a flexible schedule, giving families the freedom to focus on areas of interest or accommodate unique circumstances.\nThird, homeschooling can foster stronger family bonds and values through increased time spent together.\nIn conclusion, while homeschooling is not for everyone, it provides valuable alternatives that can benefit many learners." },
-    { topic: "Should governments regulate social media content?", answer: "I believe that governments should regulate social media content to some extent.\nFirst, regulation can help prevent the spread of harmful misinformation and hate speech, which can damage society.\nSecond, protecting users from cyberbullying and online harassment requires clear rules and enforcement.\nThird, some content, such as illegal activities and extremist propaganda, must be controlled to maintain public safety.\nIn conclusion, balanced regulation is necessary to protect individuals and society without limiting freedom of expression." },
-    { topic: "Are electric cars better for the environment?", answer: "I believe that electric cars are better for the environment compared to gasoline vehicles.\nFirst, electric cars produce zero tailpipe emissions, reducing air pollution and improving public health.\nSecond, when powered by renewable energy, their overall carbon footprint is much lower than traditional cars.\nThird, electric vehicles can help reduce dependence on fossil fuels and promote energy diversification.\nIn conclusion, electric cars offer significant environmental benefits, especially when combined with clean energy sources." },
-    { topic: "Should college education be free?", answer: "I believe that college education should be free or more affordable.\nFirst, free education can increase access for students from low-income families, promoting social equality.\nSecond, it encourages more people to pursue higher education, which benefits the economy through a skilled workforce.\nThird, reducing student debt can improve financial stability for graduates, allowing them to contribute more to society.\nIn conclusion, making college education free can create a more educated and prosperous society." },
-    { topic: "Is the death penalty justified?", answer: "I believe that the death penalty is not justified.\nFirst, there is a risk of wrongful convictions leading to irreversible mistakes.\nSecond, it does not effectively deter crime more than other punishments.\nThird, capital punishment raises ethical concerns about the value of human life.\nIn conclusion, alternatives to the death penalty should be pursued to create a fairer justice system." }
-];
-
-let timer = 0;
-let timerInterval = null;
-
-function nextTopic() {
-    const rand = Math.floor(Math.random() * topics.length);
-    document.getElementById('topic').innerText = topics[rand].topic;
-    document.getElementById('modelAnswer').innerText = "(Hidden)";
-    document.getElementById('feedback').innerText = "(Feedback will appear here)";
-    document.getElementById('userEssay').value = "";
-    countWords();
-}
-
-function showModelAnswer() {
-    const currentTopic = document.getElementById('topic').innerText;
-    const found = topics.find(t => t.topic === currentTopic);
-    if (found) document.getElementById('modelAnswer').innerText = found.answer;
-}
-
-function startTimer() {
-    if (timerInterval) return;
-    timerInterval = setInterval(() => {
-        timer++;
-        const minutes = Math.floor(timer / 60);
-        const seconds = timer % 60;
-        document.getElementById('timer').innerText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    }, 1000);
-}
-
-function pauseTimer() {
-    clearInterval(timerInterval);
-    timerInterval = null;
-}
-
-function resetTimer() {
-    pauseTimer();
-    timer = 0;
-    document.getElementById('timer').innerText = "0:00";
-}
-
-function countWords() {
-    const essay = document.getElementById("userEssay").value;
-    const words = essay.trim().split(/\s+/).filter(w => w.length > 0);
-    document.getElementById("wordCount").innerText = words.length;
-}
-
-function showCorrection() {
-    const essay = document.getElementById('userEssay').value;
-    if (!essay.trim()) {
-        alert("Please write your essay first!");
-        return;
+    function nextTopic() {
+      currentTopicIndex = Math.floor(Math.random() * topics.length);
+      document.getElementById('topic').textContent = topics[currentTopicIndex].topic;
+      document.getElementById('modelAnswer').textContent = '';
+      document.getElementById('userEssay').value = '';
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('wordCount').textContent = 0;
+      resetTimer();
     }
 
-    let feedback = "";
-    const wordCount = essay.trim().split(/\s+/).filter(w => w.length > 0).length;
-
-    const hasIntro = /I (believe|think|agree|disagree)/i.test(essay);
-    const hasReasons = (essay.match(/First|Second|Third/gi) || []).length >= 3;
-    const hasConclusion = /In conclusion/i.test(essay);
-
-    feedback += `✔️ Word Count: ${wordCount}\n`;
-    feedback += hasIntro ? "✔️ Introduction detected\n" : "❌ No clear introduction\n";
-    feedback += hasReasons ? "✔️ At least 3 reasons detected\n" : "❌ Less than 3 clear reasons\n";
-    feedback += hasConclusion ? "✔️ Conclusion detected\n" : "❌ No conclusion found\n";
-
-    if (/\bthe reason is because\b/i.test(essay)) {
-        feedback += "❗ Tip: Avoid 'the reason is because' → use 'the reason is that'\n";
-    }
-    if (/a advice/i.test(essay)) {
-        feedback += "❗ Tip: 'Advice' is uncountable → say 'some advice' or 'a piece of advice'\n";
-    }
-    if (/many information/i.test(essay)) {
-        feedback += "❗ Tip: 'Information' is uncountable → use 'much information'\n";
+    function showAnswer() {
+      if (currentTopicIndex >= 0) {
+        document.getElementById('modelAnswer').textContent = topics[currentTopicIndex].answer;
+      }
     }
 
-    const commonMisspellings = {
-        recieve: "receive",
-        seperate: "separate",
-        definately: "definitely",
-        occurence: "occurrence",
-        enviroment: "environment",
-        goverment: "government",
-        arguement: "argument",
-        accomodate: "accommodate",
-        embarass: "embarrass",
-        occured: "occurred"
-    };
-    for (const [wrong, correct] of Object.entries(commonMisspellings)) {
-        const regex = new RegExp(`\\b${wrong}\\b`, "gi");
-        if (regex.test(essay)) {
-            feedback += `❗ Spelling: "${wrong}" might be a mistake. Did you mean "${correct}"?\n`;
-        }
+    function startTimer() {
+      if (!timerInterval) {
+        timerInterval = setInterval(() => {
+          seconds++;
+          const min = Math.floor(seconds / 60);
+          const sec = seconds % 60;
+          document.getElementById('timer').textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        }, 1000);
+      }
     }
 
-    // 簡易的な文脈チェック例
-    if (/\btheir\b/i.test(essay) && /\bthere\b/i.test(essay)) {
-        feedback += "❗ Check usage of 'their' vs. 'there' carefully.\n";
-    }
-    if (/\byour\b/i.test(essay) && /\byou're\b/i.test(essay)) {
-        feedback += "❗ Check usage of 'your' vs. 'you're'.\n";
+    function pauseTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
     }
 
-    document.getElementById('feedback').innerText = feedback;
-}
-</script>
+    function resetTimer() {
+      pauseTimer();
+      seconds = 0;
+      document.getElementById('timer').textContent = '0:00';
+    }
 
+    document.getElementById('userEssay').addEventListener('input', () => {
+      const words = document.getElementById('userEssay').value.trim().split(/\s+/);
+      const wordCount = words.filter(word => word.length > 0).length;
+      document.getElementById('wordCount').textContent = wordCount;
+    });
+
+    function checkEssay() {
+      const text = document.getElementById('userEssay').value;
+      let feedback = '';
+
+      // Check for number of reasons
+      const reasonMatches = (text.match(/first|second|third/gi) || []).length;
+      if (reasonMatches < 3) {
+        feedback += '✘ Try to include three clear reasons (First, Second, Third).\n';
+      } else {
+        feedback += '✔ Good structure with three reasons.\n';
+      }
+
+      // Simple grammar check: repeated spaces, common spelling
+      if (/\bteh\b/i.test(text)) {
+        feedback += '✘ "teh" might be a typo. Did you mean "the"?\n';
+      }
+
+      // Suggest stronger conclusion
+      if (!/in conclusion/i.test(text)) {
+        feedback += '✘ Try to include a clear conclusion phrase like "In conclusion".\n';
+      } else {
+        feedback += '✔ Clear conclusion found.\n';
+      }
+
+      document.getElementById('feedback').textContent = feedback;
+    }
+
+    // Load initial topic
+    nextTopic();
+  </script>
 </body>
 </html>
